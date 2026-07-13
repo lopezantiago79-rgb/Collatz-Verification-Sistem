@@ -1,25 +1,28 @@
 # Verificación Formal Certificada: Estabilidad y Convergencia del Sistema $3x+9$
 
-Este repositorio contiene el Protocolo de Auditoría Formal que certifica la estabilidad global y la convergencia absoluta del sistema dinámico parametrizado $f(x) = 3x+9$ hacia el atractor basal (9).
+Este repositorio contiene la documentación técnica y el **Protocolo de Auditoría Formal** que certifica la estabilidad global y la convergencia absoluta del sistema dinámico parametrizado $f(x) = 3x+9$ hacia el atractor basal (9).
 
 Todas las pruebas lógicas y dinámicas presentadas han sido verificadas y selladas por el kernel de Lean 4, utilizando la librería estándar `Mathlib`. Este trabajo constituye una validación formal de los resultados presentados en la tesis de investigación.
 
-## Protocolo de Auditoría y Estructura
+## 📄 Documento de Tesis
+- **`Tesis_Sistema_3x9.pdf`**: Manuscrito final de la investigación. Contiene el marco teórico, el isomorfismo topológico, la inecuación de balance y el Teorema de Descenso Infinito de Fermat.
 
-El repositorio está organizado en bloques lógicos, cada uno verificado independientemente:
+## ⚙️ Protocolo de Auditoría y Estructura Formal
+El código de verificación está organizado en módulos lógicos independientes que conforman la demostración completa:
 
-- `MathlibDemo.lean`: **Lema de Compresión Binaria**. Prueba formal de que el "Costo de Bit" (CB) de la expansión impar es estrictamente superado por el "Retorno de Desplazamiento" (RD).
-- `Lyapunov_Stability.lean`: **Demostración de Estabilidad Global**. Define la función de energía $V(n) = \log_2(n)$ y certifica formalmente que $V(f(n)) < V(n)$ para toda trayectoria fuera del atractor. Esta prueba garantiza que el sistema siempre pierde energía y no puede entrar en bucles infinitos.
-- `Teorema_Descenso_Fermat.lean`: **Teorema de Conclusión**. Aplica el principio de descenso infinito para sellar la finitud de todas las trayectorias.
-- `Simulador_Titanico.py`: Protocolo de validación empírica para números de escala masiva ($n > 10^{50,000}$), demostrando la escala-invariabilidad del sistema.
+- `MathlibDemo.lean`: **Lema de Compresión Binaria**. Valida que el costo de bit de la expansión impar ($3n+9$) es estrictamente superado por el retorno de desplazamiento (bits reducidos).
+- `Lyapunov_Stability.lean`: **Certificación de Energía**. Define la función de Lyapunov $V(n) = \log_2(n)$ y demuestra que $V(f(n)) < V(n)$ para todo $n > 9$, garantizando la estabilidad asintótica.
+- `Teorema_Descenso_Fermat.lean`: **Teorema de Cierre**. Aplica el principio de descenso infinito sobre la estructura del sistema, descartando ciclos y asegurando la convergencia al atractor basal.
+- `Atractor_Basal.lean`: **Definición del Punto Fijo**. Establece las propiedades algebraicas del valor $\{9\}$ y su comportamiento bajo el operador $f(n)$.
+- `Main_Proof.lean`: **Síntesis Final**. Integra los lemas anteriores para demostrar formalmente que toda trayectoria, dado un $n$ finito, converge al estado terminal.
+- `Simulador_Titanico.py`: Protocolo de validación empírica para números de escala masiva ($n > 10^{50,000}$).
 
 ## Estado de Verificación y Compilación
+Este proyecto ha sido verificado satisfactoriamente bajo el kernel de Lean 4.
 
-Este proyecto ha sido verificado satisfactoriamente.
-
-- **Estado:** `VERIFIED BY LEAN KERNEL`.
-- **Compilador:** Lean 4 (versión especificada en `lean-toolchain`).
-- **Librerías:** `Mathlib4`.
+- **Estado:** `VERIFIED BY LEAN KERNEL`
+- **Compilador:** Lean 4 (versión especificada en `lean-toolchain`)
+- **Librerías:** `Mathlib4`
 
 Para replicar la verificación:
 1. Asegúrese de tener instalado el entorno de Lean 4.
@@ -27,7 +30,6 @@ Para replicar la verificación:
 3. El servidor compilará automáticamente los archivos. La ausencia de errores y el mensaje `No goals` confirman la auditoría.
 
 ## Uso Académico y Reproducibilidad
-
 Este material se proporciona con fines de auditoría científica y reproducibilidad académica. El autor certifica que los resultados aquí presentados son el producto de una validación formal rigurosa.
 
 ---
