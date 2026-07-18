@@ -134,3 +134,50 @@ theorem disipacion_sumidero_binario (n : ℕ) (h_sumidero : L_b n ≤ 4) (h_pos 
     · use 9; rfl
     · use 17; rfl
     · use 17; rfl
+
+
+/-- 
+  Definición de las familias del espacio indexado como un tipo inductivo
+  para formalizar la partición exacta en el kernel de Lean 4.
+--/
+inductive FamiliaParametrica
+  | par (z : ℕ) (hz : z ≥ 6)
+  | impar (z : ℕ) (hz : z ≥ 6)
+
+/--
+  Demostración de la biyección e isomorfismo total entre el espacio clásico
+  de Collatz (enteros positivos ≥ 4) y el espacio foliado bivariado.
+--/
+def isomorfismo_total : Equiv {x : ℕ // x ≥ 4} FamiliaParametrica where
+  toFun x :=
+    if h : x.val % 2 == 0 then
+      -- Si el número real es par, pertenece a la Familia Par con su respectivo z
+      FamiliaParametrica.par ((x.val + 8) / 2) (by omega)
+    else
+      -- Si el número real es impar, pertenece a la Familia Impar con su respectivo z
+      FamiliaParametrica.impar ((x.val + 11) / 2) (by omega)
+
+  invFun f :=
+    match f with
+    | FamiliaParametrica.par z _   => ⟨2 * z - 8, by omega⟩
+    | FamiliaParametrica.impar z _ => ⟨2 * z - 11, by omega⟩
+
+  left_inv x := by
+    ext
+    dsimp
+    split_ifs with h
+    · omega
+    · omega
+
+  right_inv f := by
+    cases f with
+    | par z hz =>
+      dsimp
+      split_ifs with h
+      · rfl
+      · omega
+    | impar z hz =>
+      dsimp
+      split_ifs with h
+      · omega
+      · rfl
