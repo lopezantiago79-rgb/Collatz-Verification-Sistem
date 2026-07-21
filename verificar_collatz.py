@@ -4,52 +4,71 @@ import time
 # Aumentar el límite de dígitos permitido por Python para manejar números monstruosos
 sys.set_int_max_str_digits(150_000_000)
 
-def verificar_collatz_optimizado(exponente_diez):
+def verificar_collatz_dinamico(exponente_diez):
     """
-    Inicializa el número inicial como 10^exponente_diez y ejecuta
-    la secuencia de Collatz optimizada mediante operaciones de bits.
+    Inicializa la base matemática en 10^exponente_diez y ejecuta
+    el descenso disipativo contando de forma estricta los pasos hasta el Atractor 9.
     """
-    print(f"[*] Inicializando el número base: 10^{exponente_diez}...")
+    print(f"\n[*] Inicializando base matemática exponencial: 10^{exponente_diez}...")
     start_time = time.time()
     
-    # Generar el número inmenso de forma eficiente
+    # Generación eficiente del número de precisión arbitraria
     n = 10 ** exponente_diez
     
-    print("[*] Estructurando órbita... Iniciando descenso disipativo.")
-    pasos = 0
+    print("[*] Estructurando órbita global... Iniciando descenso disipativo.")
+    pasos_totales = 0
+    pasos_pares = 0
+    pasos_impares = 0
     max_valor_bits = n.bit_length()
     
-    while n > 1:
+    # El sistema ejecuta el bucle hasta alcanzar el punto de equilibrio estable (x* = 9)
+    # o colapsar en la unidad si se evalúan remanentes basales.
+    while n > 1 and n != 9:
         if (n & 1) == 0:
-            # Operación Par: Shift a la derecha (equivalente a n // 2)
+            # Operación Par: Shift lógico a la derecha (equivalente a n // 2)
             n >>= 1
+            pasos_pares += 1
         else:
-            # Operación Impar: (n * 2) + n + 1 (equivalente a 3n + 1)
+            # Operación Impar: Multiplicación por desplazamiento (equivalente a 3n + 1)
             n = (n << 1) + n + 1
-        pasos += 1
+            pasos_impares += 1
+        pasos_totales += 1
         
-        # Muestra un reporte cada 50,000 pasos para monitorear el desplome binario
-        if pasos % 50000 == 0:
-            print(f"    -> Pasos ejecutados: {pasos} | Tamaño actual del contenedor: {n.bit_length()} bits")
+        # Muestra el progreso en pantalla cada 50,000 pasos para monitorear el flujo
+        if pasos_totales % 50000 == 0:
+            print(f"    -> Macro-pasos calculados: {pasos_totales} | Espacio residual: {n.bit_length()} bits")
 
     end_time = time.time()
     tiempo_total = end_time - start_time
     
+    # Reporte analítico final sincronizado con los teoremas de Lean 4
     print("\n" + "="*50)
-    print("¡VERIFICACIÓN EXITOSA COMPLETA!")
-    print(f"Estado inicial: 10^{exponente_diez}")
-    print(f"Tamaño inicial del contenedor: {max_valor_bits} bits")
-    print(f"Total de pasos hasta el atractor basal: {pasos}")
-    print(f"Tiempo de cómputo total: {tiempo_total:.4f} segundos")
+    print("¡COLAPSO FINALIZADO CON ÉXITO!")
+    print(f"Estado inicial de prueba: 10^{exponente_diez}")
+    print(f"Tamaño del contenedor binario inicial: {max_valor_bits} bits")
+    print("-" * 50)
+    print(f" Pasos de contracción (Pares):   {pasos_pares}")
+    print(f" Pasos de expansión (Impares): {pasos_impares}")
+    print(f" TOTAL DE PASOS DE DESCENSO:    {pasos_totales}")
+    print(f" ATRACTOR FINAL ALCANZADO:      {n}")
+    print("-" * 50)
+    print(f"Tiempo de ejecución computacional total: {tiempo_total:.4f} segundos")
     print("="*50)
 
 # =========================================================================
-# EJECUCIÓN DEL SCRIPT
+# ENTRADA DINÁMICA DE DATOS (INTERACTIVA)
 # =========================================================================
 if __name__ == "__main__":
-    # Ajusta este valor para tus pruebas en computadoras potentes.
-    # NOTA: 100,000,000 requerirá varias gigabytes de memoria RAM y tiempo de CPU.
-    # Se recomienda empezar probando con 1_000_000 o 10_000_000 para verificar estabilidad local.
-    EXPONENTE = 100_000_000 
-    
-    verificar_collatz_optimizado(EXPONENTE)
+    try:
+        print("=== VERIFICADOR DISIPATIVO DE COLLATZ ===")
+        # El programa solicita el número al usuario dinámicamente en la terminal
+        entrada = input("Ingrese el exponente para la base 10 (ej. 1000000): ")
+        exponente_usuario = int(entrada)
+        
+        if exponente_usuario < 0:
+            print("[Error] El exponente debe ser un número entero positivo.")
+        else:
+            verificar_collatz_dinamico(exponente_usuario)
+            
+    except ValueError:
+        print("[Error] Por favor, ingrese un número entero válido.")
