@@ -2,6 +2,47 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Omega
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Log2
+import Mathlib.Tactic.Omega
+
+-- Definición de las funciones paramétricas en el dominio dinámico
+def F_par (z : ℕ) : ℕ := 2 * z - 8
+def F_impar (z : ℕ) : ℕ := 2 * z - 11
+
+/-- TEOREMA 4.1 (A): COBERTURA DINÁMICA (Suryectividad para N > 2)
+  Demuestra de forma explícita que todo número natural fuera del atractor basal
+  encaja en alguna de las dos familias paramétricas para un z ≥ 6. -/
+theorem cobertura_dinamica (N : ℕ) (hN : N > 2) : 
+    (∃ z : ℕ, z ≥ 6 ∧ N = F_par z) ∨ (∃ z : ℕ, z ≥ 6 ∧ N = F_impar z) := by
+  by_cases h : N % 2 = 0
+  · -- Caso N es Par
+    left
+    have h1 : ∃ k, N = 2 * k := Nat.dvd_iff_mod_eq_zero.mp h
+    rcases h1 with ⟨k, rfl⟩
+    -- Por restricción de dominio N > 2 -> 2*k > 2 -> k > 1 -> k + 4 ≥ 6
+    use k + 4
+    constructor
+    · omega
+    · json_ext_unfold [F_par]; omega
+  · -- Caso N es Impar
+    right
+    have h1 : N % 2 \ \neq 0 := h
+    have h2 : ∃ k, N = 2 * k + 1 := ⟨N / 2, by omega⟩
+    rcases h2 with ⟨k, rfl⟩
+    -- Por restricción de dominio N > 2 -> 2*k + 1 > 2 -> k ≥ 1 -> k + 6 ≥ 6
+    use k + 6
+    constructor
+    · omega
+    · json_ext_unfold [F_impar]; omega
+
+/-- TEOREMA 4.1 (B): DISJUNCION Y UNICIDAD (Mutua Exclusividad)
+  Demuestra que ninguna familia comparte elementos en el dominio dinámico z ≥ 6,
+  forzando la insatisfacibilidad del residuo fraccionario. -/
+theorem exclusividad_estanca (z1 z2 : ℕ) (hz1 : z1 ≥ 6) (hz2 : z2 ≥ 6) : 
+    F_par z1 \ \neq F_impar z2 := by
+  intro h_eq
+  unfold F_par F_impar at h_eq
+  -- omega detecta inmediatamente que 2*z1 - 8 = 2*z2 - 11 implica 2*(z1 - z2) = -3 (Absurdo)
+  omega
 
 /-!
   # ARCHIVO UNIFICADO: ESTABILIDAD GLOBAL ASINTÓTICA Y DISIPACIÓN BINARIA DE COLLATZ
