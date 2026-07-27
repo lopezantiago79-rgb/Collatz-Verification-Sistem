@@ -2,47 +2,6 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Omega
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Nat.Log2
-import Mathlib.Tactic.Omega
-
--- Definición de las funciones paramétricas en el dominio dinámico
-def F_par (z : ℕ) : ℕ := 2 * z - 8
-def F_impar (z : ℕ) : ℕ := 2 * z - 11
-
-/-- TEOREMA 4.1 (A): COBERTURA DINÁMICA (Suryectividad para N > 2)
-  Demuestra de forma explícita que todo número natural fuera del atractor basal
-  encaja en alguna de las dos familias paramétricas para un z ≥ 6. -/
-theorem cobertura_dinamica (N : ℕ) (hN : N > 2) : 
-    (∃ z : ℕ, z ≥ 6 ∧ N = F_par z) ∨ (∃ z : ℕ, z ≥ 6 ∧ N = F_impar z) := by
-  by_cases h : N % 2 = 0
-  · -- Caso N es Par
-    left
-    have h1 : ∃ k, N = 2 * k := Nat.dvd_iff_mod_eq_zero.mp h
-    rcases h1 with ⟨k, rfl⟩
-    -- Por restricción de dominio N > 2 -> 2*k > 2 -> k > 1 -> k + 4 ≥ 6
-    use k + 4
-    constructor
-    · omega
-    · json_ext_unfold [F_par]; omega
-  · -- Caso N es Impar
-    right
-    have h1 : N % 2 \ \neq 0 := h
-    have h2 : ∃ k, N = 2 * k + 1 := ⟨N / 2, by omega⟩
-    rcases h2 with ⟨k, rfl⟩
-    -- Por restricción de dominio N > 2 -> 2*k + 1 > 2 -> k ≥ 1 -> k + 6 ≥ 6
-    use k + 6
-    constructor
-    · omega
-    · json_ext_unfold [F_impar]; omega
-
-/-- TEOREMA 4.1 (B): DISJUNCION Y UNICIDAD (Mutua Exclusividad)
-  Demuestra que ninguna familia comparte elementos en el dominio dinámico z ≥ 6,
-  forzando la insatisfacibilidad del residuo fraccionario. -/
-theorem exclusividad_estanca (z1 z2 : ℕ) (hz1 : z1 ≥ 6) (hz2 : z2 ≥ 6) : 
-    F_par z1 \ \neq F_impar z2 := by
-  intro h_eq
-  unfold F_par F_impar at h_eq
-  -- omega detecta inmediatamente que 2*z1 - 8 = 2*z2 - 11 implica 2*(z1 - z2) = -3 (Absurdo)
-  omega
 
 /-!
   # ARCHIVO UNIFICADO: ESTABILIDAD GLOBAL ASINTÓTICA Y DISIPACIÓN BINARIA DE COLLATZ
@@ -52,7 +11,48 @@ theorem exclusividad_estanca (z1 z2 : ℕ) (hz1 : z1 ≥ 6) (hz2 : z2 ≥ 6) :
 -/
 
 -- =========================================================================
--- 1. DINÁMICA BASE DEL SISTEMA Y OPERADOR DE DESEMBOCADURA
+-- 1. DEFINICIÓN DE LAS FUNCIONES PARAMÉTRICAS Y DOMINIO DINÁMICO
+-- =========================================================================
+
+def F_par (z : ℕ) : ℕ := 2 * z - 8
+def F_impar (z : ℕ) : ℕ := 2 * z - 11
+
+-- =========================================================================
+-- 2. TEOREMA 4.1: PARTICIÓN ESTANCA DEL DOMINIO (COBERTURA Y EXCLUSIVIDAD)
+-- =========================================================================
+
+/-- TEOREMA 4.1 (A): COBERTURA DINÁMICA (Suryectividad para N > 2)
+  Demuestra de forma explícita que todo número natural fuera del atractor basal
+  encaja en alguna de las dos familias paramétricas para un z ≥ 6. -/
+theorem cobertura_dinamica (N : ℕ) (hN : N > 2) : 
+    (∃ z : ℕ, z ≥ 6 ∧ N = F_par z) ∨ (∃ z : ℕ, z ≥ 6 ∧ N = F_impar z) := by
+  by_cases h : N % 2 = 0
+  · left
+    have h1 : ∃ k, N = 2 * k := Nat.dvd_iff_mod_eq_zero.mp h
+    rcases h1 with ⟨k, rfl⟩
+    use k + 4
+    constructor
+    · omega
+    · unfold F_par; omega
+  · right
+    have h2 : ∃ k, N = 2 * k + 1 := ⟨N / 2, by omega⟩
+    rcases h2 with ⟨k, rfl⟩
+    use k + 6
+    constructor
+    · omega
+    · unfold F_impar; omega
+
+/-- TEOREMA 4.1 (B): DISJUNCION Y UNICIDAD (Mutua Exclusividad)
+  Demuestra que ninguna familia comparte elementos en el dominio dinámico z ≥ 6,
+  forzando la insatisfacibilidad del residuo fraccionario. -/
+theorem exclusividad_estanca (z1 z2 : ℕ) (hz1 : z1 ≥ 6) (hz2 : z2 ≥ 6) : 
+    F_par z1 ≠ F_impar z2 := by
+  intro h_eq
+  unfold F_par F_impar at h_eq
+  omega
+
+-- =========================================================================
+-- 3. DINÁMICA BASE DEL SISTEMA Y OPERADOR DE DESEMBOCADURA
 -- =========================================================================
 
 def C (x : ℕ) : ℕ :=
@@ -64,16 +64,7 @@ def desemboca (a b : ℕ) : Prop :=
 local infix:50 " ~ " => desemboca
 
 -- =========================================================================
--- 2. VARIABLE DE ESTADO Z Y TEORÍA DE COBERTURA (EXCLUSIVIDAD)
--- =========================================================================
-
-theorem exclusividad_familias (z₁ z₂ : ℕ) (h₁ : z₁ ≥ 6) (h₂ : z₂ ≥ 6) :
-  2 * z₁ - 8 ≠ 2 * z₂ - 11 := by
-  intro h
-  omega
-
--- =========================================================================
--- 3. OPERADORES LINEALES DE MACRO-PASO (LEYES DE CONTRACCIÓN)
+-- 4. OPERADORES LINEALES DE MACRO-PASO (LEYES DE CONTRACCIÓN)
 -- =========================================================================
 
 theorem ley_contracion_par (n : ℕ) (h : n ≥ 2) : (2 * n) ~ (n - 2) := by
@@ -91,14 +82,14 @@ theorem ley_contracion_impar (n : ℕ) (h : n ≥ 1) : (2 * n - 1) ~ (6 * n + 6)
   omega
 
 -- =========================================================================
--- 4. ESCUDO DE PARIDAD Y ALTERNANCIA MODULAR (I -> I PROHIBIDO)
+-- 5. ESCUDO DE PARIDAD Y ALTERNANCIA MODULAR (I -> I PROHIBIDO)
 -- =========================================================================
 
 theorem escudo_paridad_módulo6 (k : ℕ) : (3 * (2 * k + 1) + 9) % 6 = 0 := by
   omega
 
 -- =========================================================================
--- 5. ESTABILIDAD DE LYAPUNOV Y TRANSITIVIDAD ITERADA
+-- 6. ESTABILIDAD DE LYAPUNOV Y TRANSITIVIDAD ITERADA
 -- =========================================================================
 
 def V (x : ℕ) : ℕ := x - 9
@@ -129,7 +120,7 @@ lemma Lyapunov_decrece_iterado (x : ℕ) (p : ℕ) (hp : p > 0) (h_dom : ∀ k <
       omega
 
 -- =========================================================================
--- 6. IMPOSIBILIDAD ANALÍTICA DE CICLOS NO TRIVIALES (COROLARIO 7.1.1)
+-- 7. IMPOSIBILIDAD ANALÍTICA DE CICLOS NO TRIVIALES (COROLARIO 7.1.1)
 -- =========================================================================
 
 theorem imposibilidad_ciclos_no_triviales (x : ℕ) (p : ℕ) (hp : p > 0) 
@@ -145,7 +136,7 @@ theorem imposibilidad_ciclos_no_triviales (x : ℕ) (p : ℕ) (hp : p > 0)
   omega
 
 -- =========================================================================
--- 7. TEORÍA DE LA INFORMACIÓN Y SUMIDERO BINARIO (TEOREMA 8.1)
+-- 8. TEORÍA DE LA INFORMACIÓN Y SUMIDERO BINARIO (TEOREMA 8.1)
 -- =========================================================================
 
 def L_b (n : ℕ) : ℕ :=
@@ -176,26 +167,19 @@ theorem disipacion_sumidero_binario (n : ℕ) (h_sumidero : L_b n ≤ 4) (h_pos 
     · use 17; rfl
     · use 17; rfl
 
+-- =========================================================================
+-- 9. STRUCT CORRESPONDIENTE AL ISOMORFISMO BIYECTIVO TOTAL
+-- =========================================================================
 
-/-- 
-  Definición de las familias del espacio indexado como un tipo inductivo
-  para formalizar la partición exacta en el kernel de Lean 4.
---/
 inductive FamiliaParametrica
   | par (z : ℕ) (hz : z ≥ 6)
   | impar (z : ℕ) (hz : z ≥ 6)
 
-/--
-  Demostración de la biyección e isomorfismo total entre el espacio clásico
-  de Collatz (enteros positivos ≥ 4) y el espacio foliado bivariado.
---/
 def isomorfismo_total : Equiv {x : ℕ // x ≥ 4} FamiliaParametrica where
   toFun x :=
     if h : x.val % 2 == 0 then
-      -- Si el número real es par, pertenece a la Familia Par con su respectivo z
       FamiliaParametrica.par ((x.val + 8) / 2) (by omega)
     else
-      -- Si el número real es impar, pertenece a la Familia Impar con su respectivo z
       FamiliaParametrica.impar ((x.val + 11) / 2) (by omega)
 
   invFun f :=
