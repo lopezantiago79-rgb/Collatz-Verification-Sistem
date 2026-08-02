@@ -58,3 +58,4 @@ if __name__ == "__main__":
     mensaje_recuperado = descifrar_pacf(atractor_final, mapa_bits)
     print(f"\n--- Descifrado Exitoso (Cero Metas Abiertas en la Reversión) ---")
     print(f"Mensaje Recuperado: '{mensaje_recuperado}'")
+Añadir script de simulación criptográfica PACF
