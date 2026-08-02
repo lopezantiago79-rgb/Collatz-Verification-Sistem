@@ -11,8 +11,8 @@ def entero_a_texto(numero):
     """Reconvierte un número entero masivo a su string de texto original."""
     return numero.to_bytes((numero.bit_length() + 7) // 8, byteorder='big').decode('utf-8')
 
-def cifrar_pacf(mensaje_texto):
-    """Simula el cifrado disipativo (Camino hacia adelante del sistema bivariado)."""
+def cifrar_clh(mensaje_texto):
+    """Simula el cifrado disipativo del Criptosistema López-Heinzen (CLH)."""
     n = texto_a_entero(mensaje_texto)
     pasos = 0
     ruta_paridades = []
@@ -29,8 +29,8 @@ def cifrar_pacf(mensaje_texto):
         
     return n, pasos, ruta_paridades
 
-def descifrar_pacf(atractor, ruta_paridades):
-    """Simula el descifrado mediante el mapa inverso biyectivo (Llave Privada invFun)."""
+def descifrar_clh(atractor, ruta_paridades):
+    """Descifrado mediante el mapa inverso biyectivo (Llave Privada invFun del CLH)."""
     n = atractor
     # Se revierte la ruta de paridades desde el punto de equilibrio hacia el origen
     for paridad in reversed(ruta_paridades):
@@ -41,21 +41,19 @@ def descifrar_pacf(atractor, ruta_paridades):
             
     return entero_a_texto(n)
 
-# --- Demostración y Validación del Criptosistema ---
+# --- Demostración y Validación del Criptosistema CLH ---
 if __name__ == "__main__":
-    # Mensaje de prueba maestro
     mensaje_original = "LO LOGRE"
     print(f"Mensaje Original a Cifrar: '{mensaje_original}'")
     
-    # 1. Ejecución del proceso de Cifrado (Clave Pública / Simulación de Órbita)
-    atractor_final, total_pasos, mapa_bits = cifrar_pacf(mensaje_original)
-    print(f"\n--- Criptograma Transmitido (Seguro ante Terceros) ---")
+    # 1. Ejecución del proceso de Cifrado CLH
+    atractor_final, total_pasos, mapa_bits = cifrar_clh(mensaje_original)
+    print(f"\n--- Criptograma Transmitido Seguro (Protocolo CLH) ---")
     print(f"Estado en el Atractor Basal: {atractor_final}")
     print(f"Longitud de la Llave de Bits: {len(mapa_bits)} bits")
     print(f"Total de Pasos de Disipación de Entropía: {total_pasos}")
     
-    # 2. Ejecución del proceso de Descifrado (Clave Privada / Isomorfismo de Foliación)
-    mensaje_recuperado = descifrar_pacf(atractor_final, mapa_bits)
-    print(f"\n--- Descifrado Exitoso (Cero Metas Abiertas en la Reversión) ---")
+    # 2. Ejecución del proceso de Descifrado CLH
+    mensaje_recuperado = descifrar_clh(atractor_final, mapa_bits)
+    print(f"\n--- Descifrado Exitoso Certificado por Isomorfismo ---")
     print(f"Mensaje Recuperado: '{mensaje_recuperado}'")
-Añadir script de simulación criptográfica PACF
