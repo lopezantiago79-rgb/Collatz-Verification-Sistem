@@ -1,21 +1,26 @@
-MIT License
+CONJUGACIÓN BIVARIADA & PACF CRIPTOSISTEMA - LICENCIA DUAL DE SOFTWARE
+Copyright (c) 2026 Prof. Santiago López (Villa Elisa, Entre Ríos, Argentina)
 
-Copyright (c) 2026 lopezantiago79-rgb
+Este repositorio y todo su código fuente asociado (incluyendo la suite formal en Lean 4,
+los scripts complementarios en Python y las especificaciones analíticas) están sujetos
+a un esquema de licenciamiento dual administrado por el autor original.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. LICENCIA ACADÉMICA Y DE CIENCIA ABIERTA (USO NO COMERCIAL):
+Se autoriza de forma gratuita el uso, copia, modificación y distribución de este software
+a investigadores independientes, estudiantes y entidades educativas exclusivamente para
+fines académicos, de auditoría técnica por pares y de investigación de ciencia abierta,
+bajo la condición expresa de citar formalmente la autoría original y su identificador
+universal permanente (Zenodo DOI: 10.5281/zenodo.21707848).
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. LICENCIA COMERCIAL INDUSTRIAL (USO EXCLUSIVO DE PAGO):
+Queda estrictamente prohibida la explotación comercial, integración en sistemas propietarios,
+uso en arquitecturas de producción de ciberseguridad corporativa, distribución bajo entornos
+pago o registro de patentes derivadas de este software por parte de empresas, corporaciones
+o entidades gubernamentales sin un contrato previo de adquisición de derechos.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Cualquier entidad comercial que desee integrar el Protocolo PACF, sus funciones inversas
+(invFun) o el modelo analítico de control de Lyapunov para fines de lucro, protección 
+corporativa o desarrollo tecnológico industrial, debe contactar formalmente al autor 
+para adquirir una Licencia Comercial paga y su correspondiente transferencia tecnológica:
+
+Contacto del Autor: lopezantiago79@gmail.com
