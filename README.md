@@ -8,21 +8,22 @@ Este repositorio contiene la suite formal de verificación lógica, los scripts 
 
 ## 🔬 Resumen del Proyecto
 
-A través de una foliación dimensional hacia una cuadrícula bivariada $(n,k)$, el espacio unidimensional clásico de Collatz es mapeado de forma estanca en dos familias paramétricas estrictamente disjuntas governed por la variable maestra de estado $z = 5n+k$ (con $z \ge 6$). Un análisis exhaustivo módulo 6 (**Escudo de Paridad**) demuestra analíticamente la prohibición absoluta de secuencias expansivas impares consecutivas. Al modelar la evolución temporal mediante una función candidato de Lyapunov lineal ($V(x) = x - 9$), se demuestra que la primera diferencia de energía potencial es estrictamente negativa ($\Delta V < 0$) para todo estado fuera del atractor basal, destruyendo la viabilidad de órbitas divergentes al infinito o ciclos no triviales.
+A través de una foliación dimensional hacia una cuadrícula bivariada $(n,k)$, el espacio unidimensional clásico de Collatz es mapeado de forma estanca en dos familias paramétricas estrictamente disjuntas gobernadas por la variable maestra de estado $z = 5n+k$ (con $z \ge 6$). Un análisis exhaustivo módulo 6 (**Escudo de Paridad**) demuestra analíticamente la prohibición absoluta de secuencias expansivas impares consecutivas. Al modelar la evolución temporal mediante una función candidato de Lyapunov lineal ($V(x) = x - 9$), se demuestra que la primera diferencia de energía potencial es estrictamente negativa ($\Delta V < 0$) para todo estado fuera del atractor basal, destruyendo la viabilidad de órbitas divergentes al infinito o ciclos no triviales.
 
-## 🔐 Criptosistema López-Heinzen (CLH) - Post-Quantum PKI
+## 🔐 Criptosistema López-Heinzen (CLH) - Post-Quantum AEAD
 
 Este repositorio introduce el **Criptosistema López-Heinzen (CLH)**, un protocolo asimétrico post-cuántico de cifrado por convolución de flujo disipativo, inmune a vectores de ataque basados en el algoritmo de Shor.
 
-*   **Clave Pública (Cifrado CLH):** Operador de flujo disipativo clásico linealizado. El mensaje de alta entropía se inyecta como un estado inicial masivo $n_0$ y se drena a una tasa media de **~4.14 bits por macro-paso** hasta su absorción en el atractor basal. El criptograma final se compone de la traza secuencial binaria de paridades.
-*   **Clave Privada (Descifrado CLH):** Basada en el operador inverso biyectivo (`invFun`) verificado formalmente en Lean 4. Resuelve las coordenadas diofánticas inversas de la cuadrícula en tiempo lineal $\mathcal{O}(M)$, anulando la explosión combinatoria exponencial $\mathcal{O}(2^k)$ que frena el criptoanálisis de terceros.
+*   **Clave Pública (Cifrado CLH):** Operador de flujo disipativo clásico linealizado. El mensaje de alta entropía y su firma criptográfica **SHA-256** se empaquetan en un bloque indisoluble $n_0$ y se drenan a una tasa media de **~4.14 bits por macro-paso** hasta su absorción en el atractor basal ($x^* = 1$). El criptograma final se compone de la traza secuencial binaria de paridades.
+*   **Clave Privada (Descifrado CLH):** Basada en el operador inverso biyectivo (`invFun`) verificado formalmente en Lean 4. Resuelve las coordenadas diofánticas inversas de la cuadrícula en tiempo lineal $\mathcal{O}(M)$, anulando la explosión combinatoria exponencial $\mathcal{O}(2^k)$ que frena el criptoanálisis de terceros y verificando la integridad del hash en destino.
 
 ## 🛠️ Estructura del Repositorio
 
 *   **`CollatzStabilization.lean`**: Suite de verificación formal en **Lean 4**. Consolida el homomorfismo dinámico, el escudo de paridad, el decremento de Lyapunov y el colapso del sumidero binario (100% libre de `sorry`).
-*   **`crypto_system.py`**: Algoritmo ejecutable de simulación del criptosistema CLH (Cifrado/Descifrado determinista de strings masivos).
+*   **`secure_hybrid_clh.py`**: Algoritmo ejecutable de producción del protocolo híbrido (Autenticación SHA-256 + Cifrado asimétrico disipativo CLH).
+*   **`crypto_system.py`**: Script base de simulación del criptosistema CLH estándar.
 *   **`benford_analysis.py`**: Script de auditoría estadística que certifica la convergencia exacta del flujo logarítmico hacia la Ley de Benford.
-*   **`manuscrito.pdf`**: Borrador definitivo del artículo científico indexado internacionalmente.
+*   **`manuscrito.pdf`**: Borrador definitivo del artículo científico indexado internacionalmente con sus apéndices técnicos correspondientes.
 
 ## 📖 Publicación y Citación Oficial
 
@@ -31,7 +32,7 @@ Este trabajo de investigación y su código fuente han sido sellados de forma pe
 > **López Heinzen, S.** (2026). *Análisis de Estabilidad Asintótica Global e Isomorfismo Bivariado mediante Verificación Formal en Lean 4*. Zenodo. https://doi.org
 
 ## ⚖️ Términos de Licenciamiento
-Este proyecto se distribuye bajo un esquema de **Licencia Dual**. El uso es completamente gratuito para fines académicos y de investigación científica abierta. Queda prohibida la explotación comercial, industrial o corporativa del criptosistema CLH sin la adquisición previa de una licencia comercial paga emitida por el autor. Consulte el archivo `LICENSE` para más detalles.
+Este proyecto se distribuye bajo un esquema de **Licencia Dual**. El uso es completamente gratuito para fines académicos y de investigación científica abierta. Queda prohibida la explotación comercial, industrial o corporativa del criptosistema CLH o sus módulos híbridos sin la adquisición previa de una licencia comercial paga emitida por el autor. Consulte el archivo `LICENSE` para más detalles.
 
 ---
 *Desarrollado de manera independiente por el Prof. Santiago López Heinzen en Villa Elisa, Entre Ríos, Argentina. Código verificado por el kernel de Lean 4 (Zero Open Goals).*
