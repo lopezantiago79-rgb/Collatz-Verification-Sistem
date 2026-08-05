@@ -4,35 +4,70 @@
 [![Lean4](https://shields.io)](https://github.io)
 [![License: Dual-Academic/Commercial](https://shields.io)](LICENSE)
 
-Este repositorio contiene la suite formal de verificación lógica, los scripts complementarios y el marco de desarrollo tecnológico correspondientes a la resolución de la **Conjetura de Collatz** mediante la teoría de sistemas dinámicos disipativos, funciones de Lyapunov y el principio de Descenso Infinito.
+Este repositorio contiene la suite formal de verificación lógica, los scripts analíticos complementarios y los modelos computacionales correspondientes a la investigación sobre la estructura algebraica y la estabilidad asintótica de las trayectorias de Collatz mediante sistemas dinámicos discretos disipativos.
 
-## 🔬 Resumen del Proyecto
+## 🔬 Resumen de la Investigación
 
-A través de una foliación dimensional hacia una cuadrícula bivariada $(n,k)$, el espacio unidimensional clásico de Collatz es mapeado de forma estanca en dos familias paramétricas estrictamente disjuntas gobernadas por la variable maestra de estado $z = 5n+k$ (con $z \ge 6$). Un análisis exhaustivo módulo 6 (**Escudo de Paridad**) demuestra analíticamente la prohibición absoluta de secuencias expansivas impares consecutivas. Al modelar la evolución temporal mediante una función candidato de Lyapunov lineal ($V(x) = x - 9$), se demuestra que la primera diferencia de energía potencial es estrictamente negativa ($\Delta V < 0$) para todo estado fuera del atractor basal, destruyendo la viabilidad de órbitas divergentes al infinito o ciclos no triviales.
+A través de una foliación dimensional hacia una cuadrícula bivariada $(n,k)$, la dinámica unidimensional clásica es mapeada en familias paramétricas disjuntas gobernadas por la variable maestra de estado $z = 5n+k$ (con $z \ge 6$). El proyecto desarrolla un análisis basado en el **Escudo de Paridad** para evaluar la exclusión analítica de secuencias expansivas impares consecutivas. Al modelar la evolución temporal mediante una función candidato de Lyapunov lineal ($V(x) = x - 9$), se busca fundamentar el colapso monótono de las órbitas hacia el atractor basal mediante el principio de Descenso Infinito.
 
-## 🔐 Criptosistema López-Heinzen (CLH) - Post-Quantum AEAD
+## ⚙️ Prototipos de Investigación en Codificación Reversible (CLH)
 
-Este repositorio introduce el **Criptosistema López-Heinzen (CLH)**, un protocolo asimétrico post-cuántico de cifrado por convolución de flujo disipativo, inmune a vectores de ataque basados en el algoritmo de Shor.
+El repositorio incluye una suite de herramientas en Python orientada a la experimentación empírica y al análisis de flujos reversibles asimétricos derivados de la dinámica bivariada del sistema:
 
-*   **Clave Pública (Cifrado CLH):** Operador de flujo disipativo clásico linealizado. El mensaje de alta entropía y su firma criptográfica **SHA-256** se empaquetan en un bloque indisoluble $n_0$ y se drenan a una tasa media de **~4.14 bits por macro-paso** hasta su absorción en el atractor basal ($x^* = 1$). El criptograma final se compone de la traza secuencial binaria de paridades.
-*   **Clave Privada (Descifrado CLH):** Basada en el operador inverso biyectivo (`invFun`) verificado formalmente en Lean 4. Resuelve las coordenadas diofánticas inversas de la cuadrícula en tiempo lineal $\mathcal{O}(M)$, anulando la explosión combinatoria exponencial $\mathcal{O}(2^k)$ que frena el criptoanálisis de terceros y verificando la integridad del hash en destino.
+1. **Esquema de Codificación Asimétrica Reversible (CLH):** Prototipo que modela la inyección y extracción determinista de cadenas de texto masivas convirtiéndolas en estados energéticos iniciales $n_0$. La trayectoria de paridades binarias actúa como un mapa topológico unívoco que permite al receptor legítimo revertir el flujo en tiempo lineal $\mathcal{O}(L)$ mediante las identidades `invFun` verificado sin objetivos abiertos en Lean 4.
+2. **Protocolo Híbrido Autenticado (CLH-AEAD):** Extensión algorítmica experimental que encapsula un mecanismo de verificación de integridad mediante **SHA-256** dentro del bloque estructurado antes de la convolución de flujo, orientado al estudio de la detección de alteraciones en tránsito.
+3. **Módulo Experimental de Cifrado de Flujo (Stream Cipher V4):** Prototipo de investigación que emplea un generador determinista de flujo inspirado en la dinámica de Collatz y una semilla estructurada de 512 bits para estudiar mecanismos de difusión y codificación reversible. Las propiedades criptográficas del generador constituyen un objeto de investigación en curso.
+
+## 📊 Estado del Proyecto (Project Status)
+
+*   **Formal Verification (Lean 4):** Completado (`zero open goals`, 100% libre de `sorry`).
+*   **Python Prototypes:** Experimental.
+*   **Cryptographic Evaluation:** En curso (*Ongoing*).
+
+## 💻 Requisitos de Ejecución (Requirements)
+
+*   **Lean** v4.x (incluyendo Mathlib)
+*   **Python** v3.12+ (sin dependencias externas de librerías)
+
+### Instrucciones de Despliegue Rápido
+```bash
+# Clonar el repositorio
+git clone https://github.com
+
+# Compilar la suite formal en Lean 4
+lake build
+
+# Ejecutar el prototipo de flujo criptográfico v4
+python secure_stream_clh.py
+```
 
 ## 🛠️ Estructura del Repositorio
 
-*   **`CollatzStabilization.lean`**: Suite de verificación formal en **Lean 4**. Consolida el homomorfismo dinámico, el escudo de paridad, el decremento de Lyapunov y el colapso del sumidero binario (100% libre de `sorry`).
-*   **`secure_hybrid_clh.py`**: Algoritmo ejecutable de producción del protocolo híbrido (Autenticación SHA-256 + Cifrado asimétrico disipativo CLH).
-*   **`crypto_system.py`**: Script base de simulación del criptosistema CLH estándar.
-*   **`benford_analysis.py`**: Script de auditoría estadística que certifica la convergencia exacta del flujo logarítmico hacia la Ley de Benford.
-*   **`manuscrito.pdf`**: Borrador definitivo del artículo científico indexado internacionalmente con sus apéndices técnicos correspondientes.
+* **`CollatzStabilization.lean`**: Código fuente formal en **Lean 4**. Consolida el homomorfismo dinámico, el escudo de paridad, el decremento de Lyapunov y el colapso del sumidero binario.
+* **`secure_stream_clh.py`**: Algoritmo del cifrador de flujo dinámico con semilla simétrica estructurada de 512 bits (V4).
+* **`secure_hybrid_clh.py`**: Prototipo funcional del esquema de codificación e integridad unificada (CLH + SHA-256).
+* **`crypto_system.py`**: Script base de simulación para la traza elemental del mensaje maestro "LO LOGRE".
+* **`benford_analysis.py`**: Script de auditoría estadística que mide la convergencia del flujo logarítmico hacia la Ley de Benford.
+* **`Análisis de Estabilidad Asintótica Global e isomorfismo Bivariado mediante Verificación Formal en Lean 4.pdf`**: Borrador definitivo del artículo científico indexado con sus correspondientes apéndices matemáticos.
 
-## 📖 Publicación y Citación Oficial
+## 📖 Publicación y Citación Oficial (BibTeX)
 
-Este trabajo de investigación y su código fuente han sido sellados de forma permanente en la plataforma de ciencia abierta del **CERN (Zenodo)**. Puede citar este proyecto utilizando el identificador universal:
+Este trabajo de investigación independiente ha sido sellado y resguardado de forma permanente en el archivo de ciencia abierta del **CERN (Zenodo)**. Si desea citar este proyecto en trabajos académicos, utilice el siguiente formato:
 
-> **López Heinzen, S.** (2026). *Análisis de Estabilidad Asintótica Global e Isomorfismo Bivariado mediante Verificación Formal en Lean 4*. Zenodo. https://doi.org
+```bibtex
+@misc{lopezheinzen2026collatz,
+  author       = {L{\'o}pez Heinzen, Santiago},
+  title        = {An{\'a}lisis de Estabilidad Asint{\'o}tica Global e isomorfismo Bivariado mediante Verifikasi{\'o}n Formal en Lean 4},
+  month        = aug,
+  year         = 2026,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.21707849},
+  url          = {https://doi.org}
+}
+```
 
 ## ⚖️ Términos de Licenciamiento
-Este proyecto se distribuye bajo un esquema de **Licencia Dual**. El uso es completamente gratuito para fines académicos y de investigación científica abierta. Queda prohibida la explotación comercial, industrial o corporativa del criptosistema CLH o sus módulos híbridos sin la adquisición previa de una licencia comercial paga emitida por el autor. Consulte el archivo `LICENSE` para más detalles.
+Este proyecto se distribuye bajo un esquema de **Licencia Dual**. El uso es libre y gratuito para fines académicos, educativos y de investigación científica abierta. Queda estrictamente prohibida la explotación comercial, industrial o corporativa del esquema CLH o sus derivados de software sin la autorización expresa y la adquisición de una licencia comercial paga emitida por el autor. Consulte el archivo `LICENSE` para más detalles.
 
 ---
-*Desarrollado de manera independiente por el Prof. Santiago López Heinzen en Villa Elisa, Entre Ríos, Argentina. Código verificado por el kernel de Lean 4 (Zero Open Goals).*
+*Desarrollado de manera independiente por el Prof. Santiago López Heinzen en Villa Elisa, Entre Ríos, Argentina. Código verificado por el kernel lógico de Lean 4.*
