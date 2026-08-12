@@ -1,73 +1,183 @@
-# Análisis de Estabilidad Asintótica Global e Isomorfismo Bivariado mediante Verificación Formal en Lean 4
+# Collatz Verification System
 
-[![DOI](https://zenodo.org)](https://doi.org)
-[![Lean4](https://shields.io)](https://github.io)
-[![License: Dual-Academic/Commercial](https://shields.io)](LICENSE)
+## Análisis de Estabilidad Asintótica Global e Isomorfismo Bivariado mediante Verificación Formal en Lean 4
 
-Este repositorio contiene la suite formal de verificación lógica, los scripts analíticos complementarios y los modelos computacionales correspondientes a la investigación sobre la estructura algebraica y la estabilidad asintótica de las trayectorias de Collatz mediante sistemas dinámicos discretos disipativos.
-
-## 🔬 Resumen de la Investigación
-
-A través de una foliación dimensional hacia una cuadrícula bivariada $(n,k)$, la dinámica unidimensional clásica es mapeada en familias paramétricas disjuntas gobernadas por la variable maestra de estado $z = 5n+k$ (con $z \ge 6$). El proyecto desarrolla un análisis basado en el **Escudo de Paridad** para evaluar la exclusión analítica de secuencias expansivas impares consecutivas. Al modelar la evolución temporal mediante una función candidato de Lyapunov lineal ($V(x) = x - 9$), se busca fundamentar el colapso monótono de las órbitas hacia el atractor basal mediante el principio de Descenso Infinito.
-
-## ⚙️ Prototipos de Investigación en Codificación Reversible (CLH)
-
-El repositorio incluye una suite de herramientas en Python orientada a la experimentación empírica y al análisis de flujos reversibles asimétricos derivados de la dinámica bivariada del sistema:
-
-1. **Esquema de Codificación Asimétrica Reversible (CLH):** Prototipo que modela la inyección y extracción determinista de cadenas de texto masivas convirtiéndolas en estados energéticos iniciales $n_0$. La trayectoria de paridades binarias actúa como un mapa topológico unívoco que permite al receptor legítimo revertir el flujo en tiempo lineal $\mathcal{O}(L)$ mediante las identidades `invFun` verificado sin objetivos abiertos en Lean 4.
-2. **Protocolo Híbrido Autenticado (CLH-AEAD):** Extensión algorítmica experimental que encapsula un mecanismo de verificación de integridad mediante **SHA-256** dentro del bloque estructurado antes de la convolución de flujo, orientado al estudio de la detección de alteraciones en tránsito.
-3. **Módulo Experimental de Cifrado de Flujo (Stream Cipher V4):** Prototipo de investigación que emplea un generador determinista de flujo inspirado en la dinámica de Collatz y una semilla estructurada de 512 bits para estudiar mecanismos de difusión y codificación reversible. Las propiedades criptográficas del generador constituyen un objeto de investigación en curso.
-
-## 📊 Estado del Proyecto (Project Status)
-
-*   **Formal Verification (Lean 4):** Completado (`zero open goals`, 100% libre de `sorry`).
-*   **Python Prototypes:** Experimental.
-*   **Cryptographic Evaluation:** En curso (*Ongoing*).
-
-## 💻 Requisitos de Ejecución (Requirements)
-
-*   **Lean** v4.x (incluyendo Mathlib)
-*   **Python** v3.12+ (sin dependencias externas de librerías)
-
-### Instrucciones de Despliegue Rápido
-```bash
-# Clonar el repositorio
-git clone https://github.com
-
-# Compilar la suite formal en Lean 4
-lake build
-
-# Ejecutar el prototipo de flujo criptográfico v4
-python secure_stream_clh.py
-```
-
-## 🛠️ Estructura del Repositorio
-
-* **`CollatzStabilization.lean`**: Código fuente formal en **Lean 4**. Consolida el homomorfismo dinámico, el escudo de paridad, el decremento de Lyapunov y el colapso del sumidero binario.
-* **`secure_stream_clh.py`**: Algoritmo del cifrador de flujo dinámico con semilla simétrica estructurada de 512 bits (V4).
-* **`secure_hybrid_clh.py`**: Prototipo funcional del esquema de codificación e integridad unificada (CLH + SHA-256).
-* **`crypto_system.py`**: Script base de simulación para la traza elemental del mensaje maestro "LO LOGRE".
-* **`benford_analysis.py`**: Script de auditoría estadística que mide la convergencia del flujo logarítmico hacia la Ley de Benford.
-* **`Análisis de Estabilidad Asintótica Global e isomorfismo Bivariado mediante Verificación Formal en Lean 4.pdf`**: Borrador definitivo del artículo científico indexado con sus correspondientes apéndices matemáticos.
-
-## 📖 Publicación y Citación Oficial (BibTeX)
-
-Este trabajo de investigación independiente ha sido sellado y resguardado de forma permanente en el archivo de ciencia abierta del **CERN (Zenodo)**. Si desea citar este proyecto en trabajos académicos, utilice el siguiente formato:
-
-```bibtex
-@misc{lopezheinzen2026collatz,
-  author       = {L{\'o}pez Heinzen, Santiago},
-  title        = {An{\'a}lisis de Estabilidad Asint{\'o}tica Global e isomorfismo Bivariado mediante Verifikasi{\'o}n Formal en Lean 4},
-  month        = aug,
-  year         = 2026,
-  publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.21707849},
-  url          = {https://doi.org}
-}
-```
-
-## ⚖️ Términos de Licenciamiento
-Este proyecto se distribuye bajo un esquema de **Licencia Dual**. El uso es libre y gratuito para fines académicos, educativos y de investigación científica abierta. Queda estrictamente prohibida la explotación comercial, industrial o corporativa del esquema CLH o sus derivados de software sin la autorización expresa y la adquisición de una licencia comercial paga emitida por el autor. Consulte el archivo `LICENSE` para más detalles.
+Repositorio asociado al manuscrito de investigación sobre la dinámica de Collatz mediante una representación estructural bivariada, una variable de estado maestra y formalización matemática en Lean 4.
 
 ---
-*Desarrollado de manera independiente por el Prof. Santiago López Heinzen en Villa Elisa, Entre Ríos, Argentina. Código verificado por el kernel lógico de Lean 4.*
+
+## Descripción
+
+Este proyecto propone una representación alternativa de la dinámica clásica de Collatz mediante una **foliación del espacio de rutas** hacia un sistema bivariado de índices \((n,k)\).
+
+La construcción introduce una variable de estado maestra \(z = 5n+k\), con el objetivo de reducir la descripción dimensional de las trayectorias a una única variable estructural.
+
+El manuscrito desarrolla una clasificación de las rutas mediante dos familias paramétricas —Par e Impar— y establece un **Teorema de Cobertura del Espacio de Índices**, según el cual cada índice pertenece a una de las familias de manera exclusiva.
+
+La investigación continúa con el análisis de subclases modulares, funciones de estabilidad y una función de tipo Lyapunov destinada a describir la disipación del sistema hacia el sumidero basal.
+
+---
+
+## Objetivo
+
+El objetivo central del proyecto es estudiar la dinámica global del operador de Collatz mediante una transformación estructural que permita:
+
+* Representar las rutas mediante una parametrización bivariada;
+* Introducir la variable de estado maestra (\(z\));
+* Demostrar la cobertura y exclusividad del espacio de índices;
+* Establecer la correspondencia entre el espacio parametrizado y el sistema clásico;
+* Analizar la dinámica mediante estructuras modulares;
+* Estudiar la estabilidad asintótica mediante una función de Lyapunov;
+* Formalizar los resultados principales mediante Lean 4.
+
+El manuscrito plantea explícitamente que la transformación propuesta permite transferir los resultados de estabilidad del sistema parametrizado al sistema dinámico clásico mediante una biyección e isomorfismo estructural.
+
+---
+
+## Estructura matemática
+
+### 1. Sistema dinámico de Collatz
+Se considera el operador clásico de Collatz sobre los enteros positivos, separando las ramas correspondientes a los estados pares e impares. El análisis se centra en la estructura global de las rutas y en las relaciones entre diferentes trayectorias.
+
+### 2. Foliación bivariada
+Las rutas se organizan mediante un espacio de índices bivariado \((n,k)\). Las familias de índices presentan progresiones aritméticas con diferencia constante y permiten introducir la variable maestra \(z=5n+k\). El manuscrito utiliza esta reducción para representar la estructura de las rutas mediante una sola variable de estado.
+
+### 3. Teorema de Cobertura del Espacio de Índices
+El **Teorema 4.1 (Cobertura del Espacio)** establece la partición del espacio de índices en las familias Par e Impar. La demostración se estructura en dos partes:
+1. **Existencia:** todo índice del dominio queda representado por alguna de las familias.
+2. **Exclusividad:** las dos familias son disjuntas.
+
+Como consecuencia, el sistema parametrizado posee una estructura de transición unívoca.
+
+### 4. Subclases modulares
+A partir de la parametrización global, el manuscrito estudia la estructura modular de las trayectorias, incluyendo las subclases asociadas con las congruencias relevantes del sistema. Estas subclases permiten analizar de forma separada los comportamientos expansivos y contractivos.
+
+### 5. Estabilidad y función de Lyapunov
+La dinámica parametrizada se estudia mediante una función de energía o potencial de tipo Lyapunov. La finalidad es caracterizar el descenso del sistema hacia el atractor basal y excluir, dentro del modelo desarrollado, trayectorias divergentes y ciclos no triviales.
+
+---
+
+## Biyección e isomorfismo estructural
+
+La sección 10 del manuscrito introduce explícitamente el acoplamiento entre el espacio de índices y el sistema clásico.
+
+Se define el mapeo \(\Phi(N)=N+4\), y se demuestra su inyectividad. La sobreyectividad se formula sobre el dominio (\(N \ge 4\)), mientras que los elementos basales (\(\{1,2,3\}\)) se incorporan mediante las condiciones de borde correspondientes.
+
+Posteriormente se estudia la variable \(z=5n+k\) como variable de estado destinada a preservar la estructura dinámica del operador clásico. El propósito de esta construcción es establecer la correspondencia entre la dinámica parametrizada y la dinámica clásica de Collatz.
+
+---
+
+## Condiciones basales
+
+El sistema contempla explícitamente los estados basales y sus rutas asociadas.
+
+En particular, se consideran las estructuras *\(R*(0) = 4 \to 2 \to 1\) y *\(R*(2) = 6 \to 3 \to 10 \sim R*(1)\) que constituyen los núcleos basales utilizados para acoplar el sistema parametrizado con las trayectorias clásicas.
+
+---
+
+## Verificación formal en Lean 4
+
+Una parte fundamental del proyecto consiste en la formalización mecánica de los resultados matemáticos. El archivo principal de formalización es:
+
+```text
+CollatzStabilization.lean
+```
+
+El manuscrito especifica que el código está diseñado para ejecutarse en **Lean 4 v4.11.0** y que la arquitectura de formalización reproduce la estructura matemática desarrollada en el texto.
+
+Entre los componentes formalizados se encuentran:
+* La cobertura dinámica;
+* La exclusividad de las familias;
+* Las aplicaciones afines asociadas al espacio parametrizado;
+* Las relaciones estructurales de la variable (\(z\));
+* Las propiedades de estabilidad;
+* Las recursiones contractivas del sistema.
+
+La estrategia de formalización incluye, entre otros, los teoremas:
+
+```text
+cobertura_dinamica
+exclusividad_estanca
+```
+
+permitiendo auditar separadamente la cobertura y la exclusividad del espacio de trabajo.
+
+---
+
+## Reproducción
+
+Para reproducir la verificación formal se requiere:
+* Lean 4;
+* Mathlib;
+* El archivo `CollatzStabilization.lean`;
+* Los archivos auxiliares incluidos en el repositorio.
+
+La compilación del proyecto permite comprobar mecánicamente las declaraciones y demostraciones formalizadas en Lean. El código Lean constituye la parte destinada a la verificación formal, mientras que los scripts auxiliares permiten reproducir los experimentos computacionales descritos en el manuscrito.
+
+---
+
+## Resultados computacionales
+
+El manuscrito complementa la formalización con experimentos computacionales destinados a estudiar la dinámica de las trayectorias y el comportamiento del sistema a gran escala. Estos experimentos tienen carácter complementario respecto de la demostración matemática y la formalización en Lean.
+
+---
+
+## Extensión a estructuras aritméticas especiales
+
+El trabajo incluye además un análisis específico de los **primos de Mersenne**.
+
+La sección 12 estudia su correspondencia con las subclases modulares del sistema y demuestra una parametrización específica mediante la variable maestra ($z$).
+
+El análisis muestra que los exponentes primos impares de los números de Mersenne conducen a una estructura particular dentro de la Subclase II y a una progresión modular asociada.
+
+---
+
+## Manuscrito
+
+El desarrollo matemático completo, las definiciones, lemas, teoremas, demostraciones y resultados experimentales se encuentran en el manuscrito incluido en este repositorio.
+
+**Título:**
+> *Análisis de Estabilidad Asintótica Global e Isomorfismo Bivariado mediante Verificación Formal en Lean 4*
+
+---
+
+## Reproducibilidad y auditoría
+
+El proyecto está concebido para permitir la inspección independiente de:
+1. Las definiciones matemáticas;
+2. La parametrización bivariada;
+3. El Teorema de Cobertura;
+4. La construcción de la variable ($z$);
+5. La biyección con el espacio clásico;
+6. El isomorfismo dinámico;
+7. Las funciones de estabilidad;
+8. La formalización en Lean 4;
+9. Los experimentos computacionales.
+
+La disponibilidad del código fuente permite que terceros puedan compilar y auditar independientemente la formalización.
+
+---
+
+## Estado del proyecto
+
+**Estado:** Investigación matemática y formalización computacional.
+
+**Área:** Teoría de números / sistemas dinámicos discretos / verificación formal.
+
+**Herramientas principales:**
+* Lean 4
+* Mathlib
+* Python
+
+---
+
+## Autor
+
+**Profesor Santiago López**  
+Investigación independiente en teoría de números
+
+---
+
+## Licencia
+
+Este proyecto está bajo la **Licencia MIT**. Consulte el archivo `LICENSE` adjunto en este repositorio para obtener más detalles sobre los derechos de uso, modificación y distribución privada de los teoremas y métodos computacionales aquí descritos.
