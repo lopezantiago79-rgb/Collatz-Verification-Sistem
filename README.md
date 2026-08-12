@@ -177,6 +177,11 @@ La disponibilidad del código fuente permite que terceros puedan compilar y audi
 Investigación independiente en teoría de números
 
 ---
+## 🗄️ Citación y Registro DOI
+
+Si utiliza este modelo, los teoremas formalizados o el manuscrito teórico en sus investigaciones, por favor cite este trabajo utilizando el siguiente identificador persistente de Zenodo:
+
+> **López, S. (2026).** *Análisis de Estabilidad Asintótica Global e Isomorfismo Bivariado mediante Verificación Formal en Lean 4.* Zenodo. DOI: :  10.5281/zenodo.21707848
 
 ## Licencia
 
